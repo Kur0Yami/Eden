@@ -1887,4 +1887,22 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <string name="add_folders">Add Folder</string>
     <string name="percent">%1$d%%</string>
 
+    <!-- Combo key -->
+    <string name="combo_key">Combo key</string>
+    <string name="combo_key_slot">Combo key %1$d</string>
+    <string name="combo_key_off">Off</string>
+    <string name="combo_key_enable">Enable combo key</string>
+    <string name="combo_key_description">If no modifier is set, the trigger activates the combo on its own. If a modifier is set, hold the modifier first, then press the trigger.</string>
+    <string name="combo_key_modifier">Modifier: %1$s</string>
+    <string name="combo_key_trigger">Trigger: %1$s</string>
+    <string name="combo_key_output">Output buttons: %1$s</string>
+    <string name="combo_key_none">None</string>
+    <string name="combo_key_clear_modifier">Clear modifier</string>
+    <string name="combo_key_save">Save</string>
+    <string name="combo_key_modifier_title">Bind modifier</string>
+    <string name="combo_key_trigger_title">Bind trigger</string>
+    <string name="combo_key_output_title">Buttons to press</string>
+    <string name="combo_key_press_button">Press a button on your controller</string>
+    <string name="combo_key_incomplete">Set a trigger and at least one output button first</string>
+    <string name="combo_key_same_key">Modifier and trigger must be different buttons</string>
 </resources>

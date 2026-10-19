@@ -90,10 +90,24 @@ object InputHandler {
             controllerData = androidControllers[event.device.controllerNumber] ?: return false
         }
 
+        val buttonId = getButtonIdFromEvent(event)
+        val consumed = ComboKeyManager.onKey(
+            buttonId,
+            action == NativeInput.ButtonState.PRESSED
+        ) { keyToRelease ->
+            NativeInput.onGamePadButtonEvent(
+                controllerData.getGUID(),
+                controllerData.getPort(),
+                keyToRelease,
+                NativeInput.ButtonState.RELEASED
+            )
+        }
+        if (consumed) return true
+
         NativeInput.onGamePadButtonEvent(
             controllerData.getGUID(),
             controllerData.getPort(),
-            getButtonIdFromEvent(event),
+            buttonId,
             action
         )
         return true

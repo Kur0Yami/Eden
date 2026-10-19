@@ -57,6 +57,9 @@ class SettingsViewModel : ViewModel() {
     private val _shouldShowResetInputDialog = MutableStateFlow(false)
     val shouldShowResetInputDialog = _shouldShowResetInputDialog.asStateFlow()
 
+    private val _comboKeySlotToShow = MutableStateFlow(-1)
+    val comboKeySlotToShow = _comboKeySlotToShow.asStateFlow()
+
     private val _shouldRecreateForLanguageChange = MutableStateFlow(false)
     val shouldRecreateForLanguageChange = _shouldRecreateForLanguageChange.asStateFlow()
 
@@ -116,6 +119,10 @@ class SettingsViewModel : ViewModel() {
 
     fun setShouldShowResetInputDialog(value: Boolean) {
         _shouldShowResetInputDialog.value = value
+    }
+
+    fun setComboKeySlotToShow(slot: Int) {
+        _comboKeySlotToShow.value = slot
     }
 
     fun setShouldRecreateForLanguageChange(value: Boolean) {

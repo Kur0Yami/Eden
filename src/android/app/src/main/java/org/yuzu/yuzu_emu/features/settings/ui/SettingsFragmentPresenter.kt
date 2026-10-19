@@ -28,6 +28,7 @@ import org.yuzu.yuzu_emu.features.settings.model.ShortSetting
 import org.yuzu.yuzu_emu.features.settings.model.StringSetting
 import org.yuzu.yuzu_emu.features.settings.model.UShortSetting
 import org.yuzu.yuzu_emu.features.settings.model.view.*
+import org.yuzu.yuzu_emu.utils.ComboKeyManager
 import org.yuzu.yuzu_emu.utils.InputHandler
 import org.yuzu.yuzu_emu.utils.LosslessScalingHelper
 import org.yuzu.yuzu_emu.utils.NativeConfig
@@ -681,6 +682,17 @@ class SettingsFragmentPresenter(
 
         val inputSettings = NativeConfig.getInputSettings(true)
         sl.apply {
+            add(HeaderSetting(R.string.combo_key))
+            for (slot in 0 until ComboKeyManager.SLOT_COUNT) {
+                add(
+                    RunnableSetting(
+                        titleString = context.getString(R.string.combo_key_slot, slot + 1),
+                        descriptionString = ComboKeyManager.summary(slot)
+                            .ifEmpty { context.getString(R.string.combo_key_off) },
+                        isRunnable = true
+                    ) { settingsViewModel.setComboKeySlotToShow(slot) }
+                )
+            }
             add(
                 SubmenuSetting(
                     titleString = Settings.getPlayerString(1),

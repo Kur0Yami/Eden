@@ -144,6 +144,16 @@ class SettingsFragment : Fragment() {
             }
         }
 
+        settingsViewModel.comboKeySlotToShow.collect(
+            viewLifecycleOwner,
+            resetState = { settingsViewModel.setComboKeySlotToShow(-1) }
+        ) {
+            if (it >= 0) {
+                ComboKeyDialogFragment.newInstance(it)
+                    .show(parentFragmentManager, ComboKeyDialogFragment.TAG)
+            }
+        }
+
         settingsViewModel.shouldShowPathPicker.collect(
             viewLifecycleOwner,
             resetState = { settingsViewModel.setShouldShowPathPicker(false) }

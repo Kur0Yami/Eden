@@ -57,6 +57,7 @@ import org.yuzu.yuzu_emu.features.settings.model.Settings
 import org.yuzu.yuzu_emu.model.EmulationViewModel
 import org.yuzu.yuzu_emu.model.Game
 import org.yuzu.yuzu_emu.network.NetPlayManager
+import org.yuzu.yuzu_emu.utils.ComboKeyManager
 import org.yuzu.yuzu_emu.utils.InputHandler
 import org.yuzu.yuzu_emu.utils.Log
 import org.yuzu.yuzu_emu.utils.MemoryUtil
@@ -256,6 +257,7 @@ class EmulationActivity : AppCompatActivity(), SensorEventListener, InputManager
     override fun onPause() {
         nfcReader.stopScanning()
         stopMotionSensorListener()
+        ComboKeyManager.reset()
         super.onPause()
     }
 
