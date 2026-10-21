@@ -58,8 +58,10 @@ public:
             }
             {
                 [[maybe_unused]] std::conditional_t<with_state, StateType, int> state{func()};
+                bool boosted{false}; // PipelineBoost
                 while (!stop_token.stop_requested()) {
                     Task task;
+                    size_t backlog{};
                     {
                         std::unique_lock lock{queue_mutex};
                         if (requests.empty()) {
@@ -72,6 +74,20 @@ public:
                         }
                         task = std::move(requests.front());
                         requests.pop();
+                        backlog = requests.size();
+                    }
+                    // PipelineBoost: kalau antrean menumpuk, naikkan prioritas worker
+                    // background; turunkan lagi begitu antrean kosong (hemat panas).
+                    if (placement == ThreadPlacement::Background) {
+                        if (!boosted && backlog >= 2) {
+                            boosted = true;
+                            Common::SetCurrentThreadPriority(ThreadPriority::Normal);
+                            Common::SetCurrentThreadToAllCores();
+                        } else if (boosted && backlog == 0) {
+                            boosted = false;
+                            Common::SetCurrentThreadPriority(ThreadPriority::Low);
+                            Common::SetCurrentThreadToBackgroundWork();
+                        }
                     }
                     if constexpr (with_state) {
                         task(&state);
