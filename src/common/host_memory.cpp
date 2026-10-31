@@ -763,11 +763,30 @@ void HostMemory::Map(size_t virtual_offset, size_t host_offset, size_t length, M
 #endif
 }
 
+namespace {
+// Clamp a range to the reserved virtual space; returns false if nothing is left to operate on.
+bool ClampToVirtualSize(const char* what, size_t virtual_size, size_t& virtual_offset, size_t& length) {
+    if (virtual_offset <= virtual_size && length <= virtual_size - virtual_offset) {
+        return true;
+    }
+    LOG_WARNING(HW_Memory, "{}: range out of bounds offset={:#x} length={:#x} virtual_size={:#x}, clamping",
+                what, virtual_offset, length, virtual_size);
+    if (virtual_offset >= virtual_size) {
+        length = 0;
+        return false;
+    }
+    length = virtual_size - virtual_offset;
+    return true;
+}
+} // namespace
+
 void HostMemory::Unmap(size_t virtual_offset, size_t length, bool separate_heap) {
 #if !(defined(__OPENORBIS__) || defined(__managarm__))
     ASSERT(virtual_offset % PageAlignment == 0);
     ASSERT(length % PageAlignment == 0);
-    ASSERT(virtual_offset + length <= virtual_size);
+    if (!ClampToVirtualSize("Unmap", virtual_size, virtual_offset, length)) {
+        return;
+    }
     if (length == 0 || !virtual_base || !impl) {
         return;
     }
@@ -779,7 +798,9 @@ void HostMemory::Protect(size_t virtual_offset, size_t length, MemoryPermission 
 #if !(defined(__OPENORBIS__) || defined(__managarm__))
     ASSERT(virtual_offset % PageAlignment == 0);
     ASSERT(length % PageAlignment == 0);
-    ASSERT(virtual_offset + length <= virtual_size);
+    if (!ClampToVirtualSize("Protect", virtual_size, virtual_offset, length)) {
+        return;
+    }
     if (length == 0 || !virtual_base || !impl) {
         return;
     }
